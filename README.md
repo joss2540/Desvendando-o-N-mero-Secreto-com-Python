@@ -1,25 +1,29 @@
-import random
+import pandas as pd
+import matplotlib.pyplot as plt
 
-print("Bem-vindo ao jogo de adivinhação!")
-print("Tente adivinhar o número secreto entre 1 e 100.")
+# Simulando um conjunto de dados
+dados = {
+    'Produto': ['Arroz', 'Feijão', 'Macarrão', 'Arroz', 'Feijão', 'Macarrão'],
+    'Quantidade': [10, 5, 8, 7, 3, 6],
+    'Preço Unitário': [5.0, 4.5, 3.0, 5.0, 4.5, 3.0]
+}
 
-numero_secreto = random.randint(1, 100)
-tentativas = 0
+df = pd.DataFrame(dados)
 
-while True:
-    palpite = input("Digite seu palpite: ")
+# Criando uma nova coluna com o total da venda
+df['Total'] = df['Quantidade'] * df['Preço Unitário']
 
-    if not palpite.isdigit():
-        print("Por favor, digite um número válido.")
-        continue
+# Agrupando por produto
+resumo = df.groupby('Produto')['Total'].sum().reset_index()
 
-    palpite = int(palpite)
-    tentativas += 1
+print("Resumo de vendas por produto:")
+print(resumo)
 
-    if palpite < numero_secreto:
-        print("Muito baixo. Tente novamente.")
-    elif palpite > numero_secreto:
-        print("Muito alto. Tente novamente.")
-    else:
-        print(f"Parabéns! Você acertou o número em {tentativas} tentativas.")
-        break
+# Visualizando os dados
+plt.bar(resumo['Produto'], resumo['Total'], color='skyblue')
+plt.title('Total de Vendas por Produto')
+plt.xlabel('Produto')
+plt.ylabel('Total em R$')
+plt.show()
+
+
